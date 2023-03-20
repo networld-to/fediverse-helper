@@ -1,4 +1,9 @@
-const fedihelper = require('../dist');
+import {
+  getInstanceHost,
+  getInstanceInfo,
+  getAccountInfo,
+  getOutboxPosts,
+} from '../dist/index.js';
 
 var FEDIVERSE_HANDLE = '';
 
@@ -6,18 +11,18 @@ async function main() {
   console.log('CONFIGURED :: Fediverse Handle :: ', FEDIVERSE_HANDLE);
   console.log();
 
-  const instanceHost = fedihelper.getInstanceHost(FEDIVERSE_HANDLE);
+  const instanceHost = getInstanceHost(FEDIVERSE_HANDLE);
   console.log('DERIVED    :: Instance Host    :: ', instanceHost);
 
-  const instanceInfo = await fedihelper.getInstanceInfo(instanceHost);
+  const instanceInfo = await getInstanceInfo(instanceHost);
   console.log('QUERIED    :: Instance Info    :: ', instanceInfo);
   console.log();
 
-  const accountInfo = await fedihelper.getAccountInfo(FEDIVERSE_HANDLE);
+  const accountInfo = await getAccountInfo(FEDIVERSE_HANDLE);
   console.log('QUERIED    :: Account Info     :: ', accountInfo);
   console.log();
 
-  const posts = await fedihelper.getOutboxPosts(FEDIVERSE_HANDLE);
+  const posts = await getOutboxPosts(FEDIVERSE_HANDLE);
   console.log('QUERIED    :: Outbox Posts     :: ', posts);
 }
 
