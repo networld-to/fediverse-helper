@@ -11,14 +11,37 @@ supports also related protocols and specifications such as Webfinger.
 $ yarn add @networld-to/fediverse-helper
 ```
 
+See the following usage example to get started.
+
+```js
+import FediverseAccount from '@networld-to/fediverse-helper';
+
+const fediAccount = new FediverseAccount('@user@instance.tld');
+
+console.log(fediProfile.getInstanceHost());
+fediProfile.getAccountInfo(this.email).then((profile) => {
+  console.log(profile);
+});
+```
+
 ## Functionality
 
-| Function        | Params                   | Output                 |
-| --------------- | ------------------------ | ---------------------- |
-| getInstanceHost | fediverseHandle (String) | fediverseHost (String) |
-| getInstanceInfo | instanceHost (String)    | instanceInfo (Object)  |
-| getAccountInfo  | fediverseHandle (String) | accountInfo (Object)   |
-| getOutboxPosts  | fediverseHandle (String) | posts (\[Object\])  |
+The FediverseAccount class accepts the fediverse handle as input parameter
+during the instantiation. Everything else is derived from it by making the
+right calls and parsing the right data.
+
+| Function         | Params | Output                 |
+| ---------------- | ------ | ---------------------- |
+| getInstanceHost  | None   | fediverseHost (String) |
+| getWebfingerInfo | None   | webfingerInfo (Object) |
+| getInstanceInfo  | None   | instanceInfo (Object)  |
+| getAccountInfo   | None   | accountInfo (Object)   |
+| getOutboxPosts   | None   | posts (\[Object\])     |
+
+The getHandleHost is an internal helper function that splits the fediverse
+handle into two parts and returns the hostname of it. For the instance host
+use the getInstanceHost function. The fediverse handle may only be an alias
+to the real instance.
 
 ## Developers
 
