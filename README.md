@@ -30,13 +30,13 @@ The FediverseAccount class accepts the fediverse handle as input parameter
 during the instantiation. Everything else is derived from it by making the
 right calls and parsing the right data.
 
-| Function         | Params | Output                 |
-| ---------------- | ------ | ---------------------- |
-| getInstanceHost  | None   | fediverseHost (String) |
-| getWebfingerInfo | None   | webfingerInfo (Object) |
-| getInstanceInfo  | None   | instanceInfo (Object)  |
-| getAccountInfo   | None   | accountInfo (Object)   |
-| getOutboxPosts   | None   | posts (\[Object\])     |
+| Function         | Params                                 | Output                 | Caching                |
+| ---------------- | -------------------------------------- | ---------------------- | ---------------------- |
+| getInstanceHost  | None                                   | fediverseHost (String) | Not needed, local call |
+| getWebfingerInfo | forceFetch: boolean = false (optional) | webfingerInfo (Object) | Yes                    |
+| getInstanceInfo  | forceFetch: boolean = false (optional) | instanceInfo (Object)  | Yes                    |
+| getAccountInfo   | forceFetch: boolean = false (optional) | accountInfo (Object)   | Yes                    |
+| getOutboxPosts   | None                                   | posts (\[Object\])     | No                     |
 
 The getHandleHost is an internal helper function that splits the fediverse
 handle into two parts and returns the hostname of it. For the instance host
