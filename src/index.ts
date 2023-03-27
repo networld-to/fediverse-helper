@@ -7,6 +7,12 @@ const HEADERS = {
 export default class FediverseAccount {
   handle: string;
 
+  // BEGIN cached data elements
+  webfingerInfo: any;
+  instanceInfo: any;
+  accountInfo: any;
+  // END cached data elements
+
   constructor(handle: string) {
     if (handle == null || handle == '') {
       throw new Error('No fediverse handle provided!');
@@ -27,7 +33,10 @@ export default class FediverseAccount {
   }
 
   // getWebfingerInfo uses the host extracted via getHandleHost and makes a call to the well-known webfinger endpoint
-  async getWebfingerInfo(): Promise<any> {
+  async getWebfingerInfo(forceFetch: boolean = false): Promise<any> {
+    if (this.webfingerInfo && !forceFetch) {
+      return this.webfingerInfo;
+    }
     // If handle starts with '@' remove it
     if (this.handle.startsWith('@', 0)) {
       this.handle = this.handle.substring(1);
@@ -43,7 +52,8 @@ export default class FediverseAccount {
         headers: HEADERS,
       }
     );
-    return wellknownInfo.data;
+    this.webfingerInfo = wellknownInfo.data;
+    return this.webfingerInfo;
   }
 
   // getInstanceHost uses the received well-known webfinger data to extract the instance host
@@ -59,7 +69,10 @@ export default class FediverseAccount {
     return '';
   }
 
-  async getInstanceInfo(): Promise<any> {
+  async getInstanceInfo(forceFetch: boolean = false): Promise<any> {
+    if (this.instanceInfo && !forceFetch) {
+      return this.instanceInfo;
+    }
     const instanceHost = await this.getInstanceHost();
     const wellknown = await axios.get(`${instanceHost}/.well-known/nodeinfo`, {
       headers: HEADERS,
@@ -69,16 +82,21 @@ export default class FediverseAccount {
       wellknown.data.links &&
       wellknown.data.links.length > 0
     ) {
-      const instanceInfo = await axios.get(wellknown.data.links[0].href);
-      return instanceInfo.data;
+      const instanceInfoResponse = await axios.get(
+        wellknown.data.links[0].href
+      );
+      this.instanceInfo = instanceInfoResponse.data;
+      return this.instanceInfo;
     }
     return '';
   }
 
-  async getAccountInfo(): Promise<any> {
+  async getAccountInfo(forceFetch: boolean = false): Promise<any> {
+    if (this.accountInfo && !forceFetch) {
+      return this.accountInfo;
+    }
     const wellknownInfo = await this.getWebfingerInfo();
 
-    var accountInfo = '';
     for (const link of wellknownInfo.links) {
       if (link.rel == 'self') {
         const accountResponse = await axios.get(link.href, {
@@ -86,10 +104,11 @@ export default class FediverseAccount {
             Accept: link.type,
           },
         });
-        accountInfo = accountResponse.data;
+        // XXX: Will be overwritten by the last entry with 'rel' == 'self'
+        this.accountInfo = accountResponse.data;
       }
     }
-    return accountInfo;
+    return this.accountInfo;
   }
 
   async getOutboxPosts(): Promise<Array<any>> {
