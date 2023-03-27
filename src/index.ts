@@ -10,6 +10,7 @@ export default class FediverseAccount {
   // BEGIN cached data elements
   webfingerInfo: any;
   instanceInfo: any;
+  accountInfo: any;
   // END cached data elements
 
   constructor(handle: string) {
@@ -90,10 +91,12 @@ export default class FediverseAccount {
     return '';
   }
 
-  async getAccountInfo(): Promise<any> {
+  async getAccountInfo(forceFetch: boolean = false): Promise<any> {
+    if (this.accountInfo && !forceFetch) {
+      return this.accountInfo;
+    }
     const wellknownInfo = await this.getWebfingerInfo();
 
-    var accountInfo = '';
     for (const link of wellknownInfo.links) {
       if (link.rel == 'self') {
         const accountResponse = await axios.get(link.href, {
@@ -101,10 +104,11 @@ export default class FediverseAccount {
             Accept: link.type,
           },
         });
-        accountInfo = accountResponse.data;
+        // XXX: Will be overwritten by the last entry with 'rel' == 'self'
+        this.accountInfo = accountResponse.data;
       }
     }
-    return accountInfo;
+    return this.accountInfo;
   }
 
   async getOutboxPosts(): Promise<Array<any>> {
