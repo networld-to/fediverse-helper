@@ -1,6 +1,6 @@
 {
   "name": "@networld-to/fediverse-helper",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Provides helper API calls and functionality for Fediverse protocols, including ActivityPub, Webfinger.",
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
