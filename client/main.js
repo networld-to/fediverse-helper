@@ -5,7 +5,8 @@ const args = process.argv;
 // Accepts as input parameter the fedivese handle in the form @username@instance.tld or username@instance.tld
 if (args[2] != null) {
   // main(args[2]);
-  developmentTest(args[2]);
+  // getWebfingerInfoCachingTest(args[2]);
+  getInstanceInfoCachingTest(args[2]);
 } else {
   console.log('Usage:');
   console.log('  yarn run client @username@instance.tld');
@@ -32,7 +33,7 @@ async function main(fedihandle) {
   console.log('QUERIED    :: Outbox Posts     :: ', posts);
 }
 
-async function developmentTest(fedihandle) {
+async function getWebfingerInfoCachingTest(fedihandle) {
   const obj = new FediverseAccount(fedihandle);
 
   console.log('CONFIGURED :: Fediverse Handle :: ', fedihandle);
@@ -41,4 +42,15 @@ async function developmentTest(fedihandle) {
   console.log('API call       ', (await obj.getWebfingerInfo()).subject);
   console.log('Cached         ', (await obj.getWebfingerInfo()).subject);
   console.log('Forced API call', (await obj.getWebfingerInfo(true)).subject);
+}
+
+async function getInstanceInfoCachingTest(fedihandle) {
+  const obj = new FediverseAccount(fedihandle);
+
+  console.log('CONFIGURED :: Fediverse Handle :: ', fedihandle);
+  console.log();
+
+  console.log('API call       ', (await obj.getInstanceInfo()).software);
+  console.log('Cached         ', (await obj.getInstanceInfo()).software);
+  console.log('Forced API call', (await obj.getInstanceInfo(true)).software);
 }

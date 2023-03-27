@@ -9,6 +9,7 @@ export default class FediverseAccount {
 
   // BEGIN cached data elements
   webfingerInfo: any;
+  instanceInfo: any;
   // END cached data elements
 
   constructor(handle: string) {
@@ -67,7 +68,10 @@ export default class FediverseAccount {
     return '';
   }
 
-  async getInstanceInfo(): Promise<any> {
+  async getInstanceInfo(forceFetch: boolean = false): Promise<any> {
+    if (this.instanceInfo && !forceFetch) {
+      return this.instanceInfo;
+    }
     const instanceHost = await this.getInstanceHost();
     const wellknown = await axios.get(`${instanceHost}/.well-known/nodeinfo`, {
       headers: HEADERS,
@@ -77,8 +81,11 @@ export default class FediverseAccount {
       wellknown.data.links &&
       wellknown.data.links.length > 0
     ) {
-      const instanceInfo = await axios.get(wellknown.data.links[0].href);
-      return instanceInfo.data;
+      const instanceInfoResponse = await axios.get(
+        wellknown.data.links[0].href
+      );
+      this.instanceInfo = instanceInfoResponse.data;
+      return this.instanceInfo;
     }
     return '';
   }
