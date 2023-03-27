@@ -54,7 +54,7 @@ Alternatively run the steps manually.
 
 ```sh
 # Make your changes in files under ./src/
-$ yarn run tsc
+$ yarn build
 # see output under ./dist
 
 # Change code under ./client/main.js and run it
