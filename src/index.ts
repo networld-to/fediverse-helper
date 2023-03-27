@@ -7,6 +7,10 @@ const HEADERS = {
 export default class FediverseAccount {
   handle: string;
 
+  // BEGIN cached data elements
+  webfingerInfo: any;
+  // END cached data elements
+
   constructor(handle: string) {
     if (handle == null || handle == '') {
       throw new Error('No fediverse handle provided!');
@@ -27,7 +31,10 @@ export default class FediverseAccount {
   }
 
   // getWebfingerInfo uses the host extracted via getHandleHost and makes a call to the well-known webfinger endpoint
-  async getWebfingerInfo(): Promise<any> {
+  async getWebfingerInfo(forceFetch: boolean = false): Promise<any> {
+    if (this.webfingerInfo && !forceFetch) {
+      return this.webfingerInfo;
+    }
     // If handle starts with '@' remove it
     if (this.handle.startsWith('@', 0)) {
       this.handle = this.handle.substring(1);
@@ -43,7 +50,8 @@ export default class FediverseAccount {
         headers: HEADERS,
       }
     );
-    return wellknownInfo.data;
+    this.webfingerInfo = wellknownInfo.data;
+    return this.webfingerInfo;
   }
 
   // getInstanceHost uses the received well-known webfinger data to extract the instance host
