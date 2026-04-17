@@ -62,7 +62,11 @@ async function getAccountInfoCachingTest(fedihandle) {
   console.log('CONFIGURED :: Fediverse Handle :: ', fedihandle);
   console.log();
 
-  console.log('API call       ', (await obj.getAccountInfo()).id);
+  const accountInfo = await obj.getAccountInfo();
+  console.log('API call       ', accountInfo.id);
   console.log('Cached         ', (await obj.getAccountInfo()).id);
   console.log('Forced API call', (await obj.getAccountInfo(true)).id);
+  console.log();
+  console.log('Account Info:');
+  console.log(JSON.stringify(accountInfo, null, 2));
 }

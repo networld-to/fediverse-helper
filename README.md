@@ -14,12 +14,12 @@ $ yarn add @networld-to/fediverse-helper
 See the following usage example to get started.
 
 ```js
-import FediverseAccount from '@networld-to/fediverse-helper';
+import FediverseAccount from "@networld-to/fediverse-helper";
 
-const fediAccount = new FediverseAccount('@user@instance.tld');
+const fediAccount = new FediverseAccount("@user@instance.tld");
 
-console.log(fediProfile.getInstanceHost());
-fediProfile.getAccountInfo(this.email).then((profile) => {
+console.log(fediAccount.getInstanceHost());
+fediAccount.getAccountInfo().then((profile) => {
   console.log(profile);
 });
 ```
@@ -45,7 +45,14 @@ to the real instance.
 
 ## Developers
 
+> [!TIP]
+> If you have [Nix](https://nixos.org) installed make sure to use either direnv,
+> via `direnv allow` (first time afterwards it will switch you automatically
+> into the environment) or `nix develop` to switch to the development
+> environment to have the right tools.
+
 ```sh
+$ yarn install
 # To run ./client/main.js after compiling the library (see ./dist output)
 $ yarn run client @username@instance.tld
 ```
@@ -53,6 +60,8 @@ $ yarn run client @username@instance.tld
 Alternatively run the steps manually.
 
 ```sh
+$ yarn install
+
 # Make your changes in files under ./src/
 $ yarn build
 # see output under ./dist
@@ -60,3 +69,5 @@ $ yarn build
 # Change code under ./client/main.js and run it
 $ node ./client/main.js @username@instance.tld
 ```
+
+To update the development dependencies, such as node, yarn and typescript run `nix flake update`.
